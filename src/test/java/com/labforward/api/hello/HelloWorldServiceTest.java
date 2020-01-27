@@ -49,4 +49,25 @@ public class HelloWorldServiceTest {
 		Greeting created = helloService.createGreeting(request);
 		Assert.assertEquals(HELLO_LUKE, created.getMessage());
 	}
+
+	@Test
+	public void updateGreetingWithNullReturnEmptyOptional(){
+		final Optional<Greeting> updated = helloService.updateGreeting(null, null);
+		Assert.assertFalse(updated.isPresent());
+	}
+
+	@Test
+	public void updateGreetingOkReturnWithValidGreeting(){
+		final String HELLO_LUKE = "Hello Luke";
+		final String HELLO_JOHN = "Hello John";
+		Greeting greeting = new Greeting(HELLO_LUKE);
+
+		final Greeting createGreeting = helloService.createGreeting(greeting);
+		greeting.setMessage(HELLO_JOHN);
+		final Optional<Greeting> optionalGreeting = helloService.updateGreeting(greeting.getId(), greeting);
+
+		Assert.assertTrue(optionalGreeting.isPresent());
+		Assert.assertEquals(greeting.getMessage(), optionalGreeting.get().getMessage());
+		Assert.assertEquals(createGreeting.getId(), optionalGreeting.get().getId());
+	}
 }

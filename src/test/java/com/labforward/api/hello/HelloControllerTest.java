@@ -17,8 +17,7 @@ import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -51,8 +50,8 @@ public class HelloControllerTest extends MVCIntegrationTest {
 	public void returnsBadRequestWhenUnexpectedAttributeProvided() throws Exception {
 		String body = "{ \"tacos\":\"value\" }}";
 		mockMvc.perform(post("/hello").content(body).contentType(MediaType.APPLICATION_JSON))
-		       .andExpect(status().isBadRequest())
-		       .andExpect(jsonPath("$.message", containsString(GlobalControllerAdvice.MESSAGE_UNRECOGNIZED_PROPERTY)));
+		       .andExpect(status().isUnprocessableEntity())
+				.andExpect(jsonPath("$.message", containsString(GlobalControllerAdvice.BAD_REQUEST)));
 	}
 
 	@Test
@@ -74,8 +73,17 @@ public class HelloControllerTest extends MVCIntegrationTest {
 
 		mockMvc.perform(post("/hello").contentType(MediaType.APPLICATION_JSON)
 		                              .content(body))
-		       .andExpect(status().isOk())
+		       .andExpect(status().isCreated())
 		       .andExpect(jsonPath("$.message", is(hello.getMessage())));
+	}
+
+	@Test
+	public void returnBadRequestWhenInvalidIdUsed() throws Exception {
+		Greeting hello = new Greeting(HELLO_LUKE);
+		String greetingBody = getGreetingBody(hello);
+
+		mockMvc.perform(patch("/hello/idtyuuiogh45").contentType(MediaType.APPLICATION_JSON).content(greetingBody))
+				.andExpect(status().isNotFound());
 	}
 
 	private String getGreetingBody(Greeting greeting) throws JSONException {
