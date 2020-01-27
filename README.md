@@ -2,32 +2,36 @@
 
 This is a simple Hello World API for recruiting purposes. You, as a candidate, should work on the challenge on your own account. Please clone the repo to your account and create a PR with your solution. 
 
-## Introduction
+## Task	
+You need to add a new endpoint to the API to allow users to *update the greetings they created*.
 
-You can run the application by typing
+## Solution
+I have listed all the changes and enhancements below. I spent 10-12 hours analyzing and implementing the solution.
+#### API Changes 
+ - Added a new endpoint `Patch /hello/{id}` to patch the existing greeting in the system.
+   - It will update the entity, only if it is present in the system.
+   - If there is no entity in system for the provided Id, then system shall send a resource not found response.
+- Updated `Post /hello` - endpoint.
+  - This endpoint was returning the newly created entity in response.
+  - Updated code shall return the newly created entity as well as the location of entity in response header.
+  - It is achieved by using `EntityCreatedResponse.class`, which has location field.
 
-	./gradlew bootRun
+#### DI Change
+- Dependency injection strategy changed. Removed constructor injection of `HelloService.class` in `HelloController.class` and used setter injection instead.
 
-This will start up a Spring Boot application with Tomcat server running on 8080.
+#### API Documentation
+- Added Swagger dependency in project. It will enable the audience to visualize all the available API operations.
+- Added `GlobalConfiguration.class` - This is used for adding project configuration, included swagger configuration bean for API documentation.<br/>
+Documentation path: http://localhost:8080/swagger-ui.html#/
 
-Show all other possible tasks:
+#### Test
+- Fixed `returnsBadRequestWhenUnexpectedAttributeProvided()` and `createOKWhenRequiredGreetingProvided()` test in `HelloControllerTest.class`.
+- Added integration test case for `Patch /hello{id}` endpoint.
+- Added unit test case for update greeting in `HelloWorldServiceTest.class`
 
-	./gradlew tasks
-	
-## Your Task	
+## Note
+I found logger and datasource missing in the application. I assume it was avoided, for convenience sake. <br/> 
+Thank you for sending this coding challenge. I have tried my best to provide a feasible solution.
+ 
 
-You need to add a new endpoint to the API to allow users to *update the greetings they created*. 
 
-## Acceptance Criteria
-
-This task is purposefully open-ended. You are free to come up with your own implementation based on your assumptions. You are also welcome to improve the existing code by refactoring, cleaning up, etc. where necessary. Hint: there is a missing core piece in the application :) 
-
-Extra points for describing a user interface which utilizes the API with the new endpoint. This can be a text document, simple mock-ups, or even an interactive HTML proof-of-concept. Be creative and show us how you approach UI problems.
-
-We understand that not everyone has the same amount of "extra" time. It is also up to you to determine the amount of time you spend on the exercise. So that the reviewer understands how you are defining the scope of work, please clearly indicate your own “Definition of Done” for the task in a README file along with any other pertinent information.
-
-Regardless of how far you take the solution towards completion, please assume you are writing production code. Your solution should clearly communicate your development style, abilities, and approach to problem solving. 
-
-Let us know if you have any questions, and we look forward to seeing your approach.
-
-Good Luck!
