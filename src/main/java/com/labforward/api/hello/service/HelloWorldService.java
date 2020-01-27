@@ -53,6 +53,14 @@ public class HelloWorldService {
 		return getGreeting(DEFAULT_ID);
 	}
 
+	public Optional<Greeting> updateGreeting(String id, Greeting updateGreeting) {
+		Greeting greeting = this.greetings.computeIfPresent(id, (k, v) -> {
+			v.setMessage(updateGreeting.getMessage());
+			return v;
+		});
+		return greeting != null ? Optional.of(greeting) : Optional.empty();
+	}
+
 	private Greeting save(Greeting greeting) {
 		this.greetings.put(greeting.getId(), greeting);
 
