@@ -51,6 +51,8 @@ import static com.labforward.api.core.validation.BeanValidationUtils.OBJECT_ERRO
 @ControllerAdvice
 public class GlobalControllerAdvice extends ResponseEntityExceptionHandler implements ResponseBodyAdvice<Object> {
 
+	public static final String BAD_REQUEST = "Bad Request";
+
 	public static final String MESSAGE_UNRECOGNIZED_PROPERTY = "Unrecognized property: ";
 
 	private static final String MESSAGE_BAD_REQUEST = "Client error: server will not process request";
